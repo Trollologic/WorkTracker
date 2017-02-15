@@ -27,8 +27,16 @@
             android:value="@string/geo_api_key" />
 
         <service
-            android:name=".GeofenceTransitionsIntentService"
+            android:name=".WorkTrackerIntentService"
             android:exported="false"></service>
+
+        <receiver android:name=".SomeAppActionReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

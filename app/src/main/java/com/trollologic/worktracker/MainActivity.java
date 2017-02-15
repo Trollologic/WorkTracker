@@ -3,6 +3,7 @@ package com.trollologic.worktracker;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +34,10 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.greysonparrelli.permiso.Permiso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity
      * Used to persist application state about whether geofences were added.
      */
     private SharedPreferences mSharedPreferences;
+    private Marker geofenceMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,14 @@ public class MainActivity extends BaseActivity
         prepareDrawer(toolbar);
         // initialize GoogleMaps
         initGMaps();
+
+        SomeAppActionReceiver br = new SomeAppActionReceiver();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_RESTARTED);
+        intentFilter.addDataScheme("package");
+        registerReceiver(br, intentFilter);
     }
 
     /**
@@ -195,6 +204,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View v) {
 //                mGeofencesAdded = true;
+                mGeofenceList.add(createGeofenceObject("test geofence", geofenceMarker.getPosition()));
                 setButtonsEnabledState();
                 addGeofencesButtonHandler();
             }
@@ -204,6 +214,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View v) {
 //                mGeofencesAdded = false;
+                mGeofenceList.clear();
                 setButtonsEnabledState();
                 removeGeofencesButtonHandler();
             }
@@ -314,7 +325,8 @@ public class MainActivity extends BaseActivity
         if (mGeofencePendingIntent != null) {
             return mGeofencePendingIntent;
         }
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        Intent intent = new Intent(this, WorkTrackerIntentService.class);
+        intent.setAction("Geofence action");
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -323,25 +335,19 @@ public class MainActivity extends BaseActivity
     public void animateFAB() {
 
         if (isFabOpen) {
-
             fab.startAnimation(rotate_backward);
             fabRemove.startAnimation(fab_close);
             fabAdd.startAnimation(fab_close);
             fabRemove.setClickable(false);
             fabAdd.setClickable(false);
             isFabOpen = false;
-            Log.d("Raj", "close");
-
         } else {
-
             fab.startAnimation(rotate_forward);
             fabRemove.startAnimation(fab_open);
             fabAdd.startAnimation(fab_open);
             fabRemove.setClickable(true);
             fabAdd.setClickable(true);
             isFabOpen = true;
-            Log.d("Raj", "open");
-
         }
     }
 
@@ -433,8 +439,12 @@ public class MainActivity extends BaseActivity
     @Override
     public void onMapClick(LatLng latLng) {
         Log.d(TAG, "onMapClick("+latLng +")");
-
-        mGeofenceList.add(createGeofenceObject("test geofence", latLng));
+        if(geofenceMarker != null){
+            geofenceMarker.remove();
+        }
+        MarkerOptions marker = new MarkerOptions();
+        marker.position(latLng);
+        geofenceMarker = map.addMarker(marker);
     }
 
     private Geofence createGeofenceObject(String uniqueKey, LatLng latLng) {

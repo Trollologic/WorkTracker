@@ -40,15 +40,15 @@ import java.util.List;
  * the transition type and geofence id(s) that triggered the transition. Creates a notification
  * as the output.
  */
-public class GeofenceTransitionsIntentService extends IntentService {
+public class WorkTrackerIntentService extends IntentService {
 
-    protected static final String TAG = GeofenceTransitionsIntentService.class.getSimpleName();
+    protected static final String TAG = WorkTrackerIntentService.class.getSimpleName();
 
     /**
      * This constructor is required, and calls the super IntentService(String)
      * constructor with the name for a worker thread.
      */
-    public GeofenceTransitionsIntentService() {
+    public WorkTrackerIntentService() {
         // Use the TAG to name the worker thread.
         super(TAG);
     }
@@ -65,6 +65,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i(TAG, "ACTION: "+ intent.getAction());
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
