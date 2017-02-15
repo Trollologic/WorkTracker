@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">WorkTracker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="unknown_geofence_error">Unknown geofence error</string>
+    <string name="geofence_too_many_pending_intents">Too many pending intents</string>
+    <string name="geofence_too_many_geofences">Too many geofences</string>
+    <string name="geofence_not_available">Geofence not available</string>
+    <string name="geofence_transition_notification_text">Geofence transition notification text</string>
+     <string name="unknown_geofence_transition">Unknown geofence transition</string>
+     <string name="geofence_transition_exited">Geofence transition exited</string>
+     <string name="geofence_transition_entered">Geofence transition entered</string>
+    <string name="geofence_transition_invalid_type">Geofence transition invalid type</string>
+    <string name="geofences_added">geofences added</string>
+    <string name="geofences_removed">geofences removed</string>
+    <string name="not_connected">not connected</string>
+</resources>
