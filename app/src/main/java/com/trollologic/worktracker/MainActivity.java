@@ -2,10 +2,12 @@ package com.trollologic.worktracker;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -78,6 +80,7 @@ public class MainActivity extends BaseActivity
      */
     private SharedPreferences mSharedPreferences;
     private Marker geofenceMarker;
+    private SomeAppActionReceiver br;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +104,7 @@ public class MainActivity extends BaseActivity
         // initialize GoogleMaps
         initGMaps();
 
-        SomeAppActionReceiver br = new SomeAppActionReceiver();
+        br = new SomeAppActionReceiver();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);

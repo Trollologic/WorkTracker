@@ -34,7 +34,6 @@ public class BaseActivity extends PermisoActivity implements Permiso.IOnPermissi
 
     @Override
     public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
-
     }
 }
 //    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION
